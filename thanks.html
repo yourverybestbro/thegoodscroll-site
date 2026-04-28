@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're on the list · The Good Scroll</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --navy-mid: #0f2340;
+    --gold: #c8a052;
+    --gold-light: #e8c96e;
+    --gold-dim: #8a6a2a;
+    --cream: #f0ebe0;
+    --cream-dim: #c8c0b0;
+    --green: #8cc48c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--navy);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  nav {
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: var(--cream);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+  }
+
+  /* glow */
+  .main::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(200,160,82,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    background: var(--cream);
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op, 0.2); }
+    50% { opacity: var(--max-op, 0.8); }
+  }
+
+  .checkmark {
+    font-size: 48px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.1s;
+  }
+
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.2s;
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2vw, 22px);
+    font-style: italic;
+    color: var(--cream-dim);
+    max-width: 480px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.3s;
+  }
+
+  .verse {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-style: italic;
+    color: var(--cream);
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.4s;
+  }
+
+  .verse-ref {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.5s;
+  }
+
+  .actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s ease both;
+    animation-delay: 0.6s;
+  }
+
+  .btn-primary {
+    padding: 14px 28px;
+    background: var(--gold);
+    border: none;
+    border-radius: 2px;
+    color: var(--navy);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .btn-secondary {
+    padding: 14px 28px;
+    background: transparent;
+    border: 1px solid rgba(200,160,82,0.3);
+    border-radius: 2px;
+    color: var(--cream-dim);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid rgba(200,160,82,0.08);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(200,192,176,0.3);
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">The Good Scroll</a>
+</nav>
+
+<div class="stars" id="stars"></div>
+
+<main class="main">
+  <p class="checkmark">✦</p>
+  <p class="eyebrow">You're on the list</p>
+  <h1 class="title">See you<br><em>soon.</em></h1>
+  <p class="subtitle">We'll let you know the moment The Good Scroll is live. Until then — keep scrolling toward what matters.</p>
+
+  <p class="verse">"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future."</p>
+  <p class="verse-ref">Jeremiah 29:11</p>
+
+  <div class="actions">
+    <a href="https://www.tiktok.com/@the.good.scrolling" target="_blank" class="btn-primary">Follow on TikTok</a>
+    <a href="/" class="btn-secondary">Back to Home</a>
+  </div>
+</main>
+
+<footer>
+  <p class="footer-logo">The Good Scroll · thegoodscroll.app</p>
+</footer>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    const size = Math.random() * 2 + 1;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 4 + 2}s;
+      --delay: ${Math.random() * 4}s;
+      --min-op: ${Math.random() * 0.2 + 0.1};
+      --max-op: ${Math.random() * 0.5 + 0.4};
+    `;
+    starsEl.appendChild(star);
+  }
+</script>
+</body>
+</html>

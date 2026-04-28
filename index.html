@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Good Scroll</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --navy-mid: #0f2340;
+    --navy-light: #1a3050;
+    --gold: #c8a052;
+    --gold-light: #e8c96e;
+    --gold-dim: #8a6a2a;
+    --cream: #f0ebe0;
+    --cream-dim: #c8c0b0;
+    --green: #8cc48c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--navy);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(13,27,46,0.95) 0%, transparent 100%);
+  }
+
+  .nav-logo {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: var(--cream);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cream-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Star field */
+  .stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    background: var(--cream);
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op, 0.2); }
+    50% { opacity: var(--max-op, 0.8); }
+  }
+
+  /* Horizon glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(ellipse at bottom, rgba(200,160,82,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--cream);
+    margin-bottom: 12px;
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.4s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream-dim);
+    margin-bottom: 64px;
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.6s;
+  }
+
+  /* ── WAITLIST FORM ── */
+  .waitlist-form {
+    display: flex;
+    gap: 0;
+    max-width: 480px;
+    width: 100%;
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.8s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .waitlist-input {
+    flex: 1;
+    padding: 16px 24px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(200,160,82,0.3);
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .waitlist-input::placeholder { color: rgba(200,192,176,0.4); }
+  .waitlist-input:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.09);
+  }
+
+  .waitlist-btn {
+    padding: 16px 28px;
+    background: var(--gold);
+    border: none;
+    border-radius: 0 2px 2px 0;
+    color: var(--navy);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+
+  .waitlist-btn:hover { background: var(--gold-light); }
+
+  .waitlist-note {
+    margin-top: 16px;
+    font-size: 11px;
+    color: rgba(200,192,176,0.4);
+    letter-spacing: 1px;
+    animation: fadeUp 1s ease both;
+    animation-delay: 1s;
+  }
+
+  /* ── GOLD DIVIDER ── */
+  .divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    margin: 0 auto;
+  }
+
+  /* ── VERSE PULL QUOTE ── */
+  .verse-section {
+    padding: 100px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .verse-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 4vw, 42px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    max-width: 700px;
+    margin: 0 auto 24px;
+    line-height: 1.5;
+  }
+
+  .verse-ref {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ── PHONE MOCKUPS ── */
+  .phones-section {
+    padding: 80px 24px 120px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .phone-mockup {
+    width: 220px;
+    height: 440px;
+    border: 1.5px solid rgba(200,160,82,0.25);
+    border-radius: 32px;
+    background: var(--navy-mid);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+
+  .phone-mockup:nth-child(2) {
+    margin-top: -40px;
+    border-color: rgba(200,160,82,0.5);
+  }
+
+  .phone-mockup:nth-child(3) {
+    margin-top: 20px;
+  }
+
+  .phone-screen {
+    position: absolute;
+    inset: 8px;
+    border-radius: 26px;
+    background: var(--navy-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .phone-placeholder-img {
+    width: 100%;
+    flex: 1;
+    border-radius: 12px;
+    background: linear-gradient(160deg, var(--navy-mid) 0%, #1a3a1a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .phone-placeholder-bar {
+    height: 2px;
+    width: 30px;
+    background: var(--gold);
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+
+  .phone-placeholder-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(240,235,224,0.8);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .phone-placeholder-ref {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .phone-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: rgba(200,192,176,0.3);
+    text-transform: uppercase;
+    text-align: center;
+    padding-bottom: 4px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 100px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 48px;
+  }
+
+  .how-item {
+    text-align: center;
+  }
+
+  .how-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(200,160,82,0.2);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .how-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+
+  .how-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--cream-dim);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── THEMES ── */
+  .themes-section {
+    padding: 80px 24px 100px;
+    text-align: center;
+    border-top: 1px solid rgba(200,160,82,0.08);
+  }
+
+  .themes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 700px;
+    margin: 40px auto 0;
+  }
+
+  .theme-pill {
+    padding: 8px 18px;
+    border: 1px solid rgba(200,160,82,0.2);
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--cream-dim);
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+
+  .theme-pill:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── FINAL CTA ── */
+  .cta-section {
+    padding: 120px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(200,160,82,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .cta-sub {
+    font-size: 13px;
+    color: var(--cream-dim);
+    letter-spacing: 1px;
+    margin-bottom: 48px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px;
+    border-top: 1px solid rgba(200,160,82,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(200,192,176,0.4);
+    text-transform: uppercase;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(200,192,176,0.3);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-social {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-social a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(200,192,176,0.3);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .footer-social a:hover { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── JOURNAL ── */
+  .journal-section {
+    padding: 100px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(200,160,82,0.08);
+  }
+
+  .journal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .journal-card {
+    border: 1px solid rgba(200,160,82,0.12);
+    padding: 32px;
+    position: relative;
+    transition: border-color 0.3s;
+    cursor: pointer;
+  }
+
+  .journal-card:hover {
+    border-color: rgba(200,160,82,0.35);
+  }
+
+  .journal-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .journal-date {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .journal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+
+  .journal-excerpt {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--cream-dim);
+    margin-bottom: 24px;
+  }
+
+  .journal-verse {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(200,160,82,0.6);
+    padding-left: 12px;
+    border-left: 1px solid rgba(200,160,82,0.3);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .journal-read {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+
+  .journal-read:hover { opacity: 0.6; }
+
+  .journal-coming {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .journal-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    border: 1px solid rgba(200,160,82,0.2);
+    padding: 3px 8px;
+    margin-bottom: 14px;
+  }
+
+  .success-msg {
+    display: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-top: 16px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .waitlist-form { flex-direction: column; }
+    .waitlist-input { border-right: 1px solid rgba(200,160,82,0.3); border-bottom: none; border-radius: 2px 2px 0 0; }
+    .waitlist-btn { border-radius: 0 0 2px 2px; text-align: center; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">The Good Scroll</a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#themes">Themes</a></li>
+    <li><a href="#waitlist">Join Waitlist</a></li>
+  </ul>
+</nav>
+
+<!-- STARS -->
+<div class="stars" id="stars"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Coming Soon · Free to Download</p>
+  <h1 class="hero-title">The Good<br><em>Scroll</em></h1>
+  <p class="hero-tagline">You're going to scroll anyway. Make it count.</p>
+
+  <form class="waitlist-form" id="waitlist" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="waitlist" />
+    <input type="hidden" name="bot-field" />
+    <input class="waitlist-input" type="email" name="email" placeholder="your@email.com" id="emailInput" required />
+    <button class="waitlist-btn" type="submit">Notify Me</button>
+  </form>
+  <p class="waitlist-note">No spam. Just the word when it drops.</p>
+  <p class="success-msg" id="successMsg">✦ You're on the list. See you soon.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- VERSE PULL QUOTE -->
+<section class="verse-section">
+  <p class="verse-quote">"He has made everything beautiful in its time."</p>
+  <p class="verse-ref">Ecclesiastes 3:11</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- PHONE MOCKUPS -->
+<section class="phones-section">
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <div class="phone-placeholder-img">
+        <div class="phone-placeholder-bar"></div>
+        <p class="phone-placeholder-text">"Be still, and know that I am God."</p>
+        <p class="phone-placeholder-ref">Psalm 46:10 · Peace</p>
+      </div>
+      <p class="phone-label">Screenshot coming soon</p>
+    </div>
+  </div>
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <div class="phone-placeholder-img" style="background: linear-gradient(160deg, #1a1228 0%, #2a1842 100%);">
+        <div class="phone-placeholder-bar" style="background: #c4a0d4;"></div>
+        <p class="phone-placeholder-text">"I can do all things through Christ who strengthens me."</p>
+        <p class="phone-placeholder-ref" style="color: #c4a0d4;">Phil 4:13 · Strength</p>
+      </div>
+      <p class="phone-label">Screenshot coming soon</p>
+    </div>
+  </div>
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <div class="phone-placeholder-img" style="background: linear-gradient(160deg, #1a2e1a 0%, #243824 100%);">
+        <div class="phone-placeholder-bar" style="background: #8cc48c;"></div>
+        <p class="phone-placeholder-text">"For I know the plans I have for you, declares the Lord."</p>
+        <p class="phone-placeholder-ref" style="color: #8cc48c;">Jer 29:11 · Hope</p>
+      </div>
+      <p class="phone-label">Screenshot coming soon</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <p class="section-label">How It Works</p>
+  <div class="how-grid">
+    <div class="how-item">
+      <p class="how-number">01</p>
+      <h3 class="how-title">Open the app</h3>
+      <p class="how-body">Full-screen Scripture over beautiful nature photography. No ads, no noise, no algorithm designed to keep you anxious.</p>
+    </div>
+    <div class="how-item">
+      <p class="how-number">02</p>
+      <h3 class="how-title">Swipe up</h3>
+      <p class="how-body">The same gesture you already know. Each swipe brings a new verse. Filter by what you need — Peace, Hope, Strength, and more.</p>
+    </div>
+    <div class="how-item">
+      <p class="how-number">03</p>
+      <h3 class="how-title">Save & share</h3>
+      <p class="how-body">Heart a verse to save it. Share the card directly to a friend who needs it today. The word spreads the way it always has — person to person.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THEMES -->
+<section class="themes-section" id="themes">
+  <p class="section-label">14 Themes · 100+ Verses</p>
+  <div class="themes-grid">
+    <span class="theme-pill">✨ Peace</span>
+    <span class="theme-pill">🤝 Trust</span>
+    <span class="theme-pill">🌟 Hope</span>
+    <span class="theme-pill">💪 Strength</span>
+    <span class="theme-pill">🦁 Courage</span>
+    <span class="theme-pill">💛 Comfort</span>
+    <span class="theme-pill">❤️ Love</span>
+    <span class="theme-pill">🙏 Gratitude</span>
+    <span class="theme-pill">☀️ Joy</span>
+    <span class="theme-pill">📖 Wisdom</span>
+    <span class="theme-pill">🌸 Kindness</span>
+    <span class="theme-pill">🏃 Perseverance</span>
+    <span class="theme-pill">🌍 Creation</span>
+    <span class="theme-pill">🌱 Renewal</span>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">Ready to scroll<br><em>differently?</em></h2>
+  <p class="cta-sub">Join the waitlist. Free when it launches.</p>
+  <form class="waitlist-form" style="margin: 0 auto;" name="waitlist-bottom" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="waitlist-bottom" />
+    <input type="hidden" name="bot-field" />
+    <input class="waitlist-input" type="email" name="email" placeholder="your@email.com" id="emailInput2" required />
+    <button class="waitlist-btn" type="submit">Notify Me</button>
+  </form>
+  <p class="success-msg" id="successMsg2" style="display:none;">✦ You're on the list. See you soon.</p>
+
+<div style="margin-top: 48px; display: flex; justify-content: center; gap: 32px; align-items: center;">
+    <a href="https://www.tiktok.com/@the.good.scrolling" target="_blank" style="font-size: 11px; letter-spacing: 3px; color: rgba(200,192,176,0.4); text-decoration: none; text-transform: uppercase; transition: color 0.3s;" onmouseover="this.style.color='#c8a052'" onmouseout="this.style.color='rgba(200,192,176,0.4)'">TikTok</a>
+    <a href="https://www.instagram.com/thegoodscrolling" target="_blank" style="font-size: 11px; letter-spacing: 3px; color: rgba(200,192,176,0.4); text-decoration: none; text-transform: uppercase; transition: color 0.3s;" onmouseover="this.style.color='#c8a052'" onmouseout="this.style.color='rgba(200,192,176,0.4)'">Instagram</a>
+    <a href="https://ko-fi.com/thegoodscroll" target="_blank" style="font-size: 11px; letter-spacing: 3px; color: rgba(200,192,176,0.4); text-decoration: none; text-transform: uppercase; transition: color 0.3s;" onmouseover="this.style.color='#c8a052'" onmouseout="this.style.color='rgba(200,192,176,0.4)'">Support the Mission</a>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-logo">The Good Scroll · thegoodscroll.app</p>
+  <ul class="footer-links">
+    <li><a href="/legal.html">Privacy & Terms</a></li>
+    <li><a href="mailto:jaredgoodscroll@gmail.com">Contact</a></li>
+    
+  </ul>
+  <div class="footer-social">
+    <a href="https://www.tiktok.com/@the.good.scrolling" target="_blank">TikTok</a>
+    <a href="https://www.instagram.com/thegoodscrolling" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // Generate stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    const size = Math.random() * 2 + 1;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      top: ${Math.random() * 70}%;
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 4 + 2}s;
+      --delay: ${Math.random() * 4}s;
+      --min-op: ${Math.random() * 0.2 + 0.1};
+      --max-op: ${Math.random() * 0.5 + 0.4};
+    `;
+    starsEl.appendChild(star);
+  }
+
+  // Waitlist handlers
+  function handleWaitlist(e) {
+    e.preventDefault();
+    const input = document.getElementById('emailInput');
+    const msg = document.getElementById('successMsg');
+    const note = document.querySelector('.waitlist-note');
+    if (input.value && input.value.includes('@')) {
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'form-name': 'waitlist', email: input.value }).toString()
+      }).catch(() => {});
+      document.getElementById('waitlist').style.display = 'none';
+      note.style.display = 'none';
+      msg.style.display = 'block';
+    } else {
+      input.style.borderColor = 'rgba(255,100,100,0.5)';
+      setTimeout(() => input.style.borderColor = 'rgba(200,160,82,0.3)', 1500);
+    }
+  }
+
+  function handleWaitlist2(e) {
+    e.preventDefault();
+    const input = document.getElementById('emailInput2');
+    const msg = document.getElementById('successMsg2');
+    if (input.value && input.value.includes('@')) {
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'form-name': 'waitlist-bottom', email: input.value }).toString()
+      }).catch(() => {});
+      input.closest('form').style.display = 'none';
+      msg.style.display = 'block';
+    } else {
+      input.style.borderColor = 'rgba(255,100,100,0.5)';
+      setTimeout(() => input.style.borderColor = 'rgba(200,160,82,0.3)', 1500);
+    }
+  }
+
+  // Enter key support
+  document.getElementById('emailInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleWaitlist(e);
+  });
+  document.getElementById('emailInput2').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleWaitlist2(e);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy & Terms · The Good Scroll</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --navy-mid: #0f2340;
+    --gold: #c8a052;
+    --gold-dim: #8a6a2a;
+    --cream: #f0ebe0;
+    --cream-dim: #c8c0b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--navy);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  nav {
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(200,160,82,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: var(--cream);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .nav-back {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.3s;
+  }
+
+  .nav-back:hover { opacity: 0.6; }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .page-date {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 64px;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 48px 0;
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 16px;
+    margin-top: 48px;
+  }
+
+  h2:first-of-type { margin-top: 0; }
+
+  p {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--cream-dim);
+    margin-bottom: 16px;
+  }
+
+  ul {
+    margin: 0 0 16px 20px;
+  }
+
+  ul li {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--cream-dim);
+    margin-bottom: 6px;
+  }
+
+  a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  a:hover { opacity: 0.7; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    display: block;
+  }
+
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid rgba(200,160,82,0.08);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(200,192,176,0.4);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">The Good Scroll</a>
+  <a href="/" class="nav-back">← Back</a>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Privacy & Terms</h1>
+  <p class="page-date">Effective April 22, 2026</p>
+
+  <!-- PRIVACY POLICY -->
+  <span class="section-label">Privacy Policy</span>
+
+  <h2>What we collect</h2>
+  <p>The Good Scroll is designed to be simple and respectful of your privacy. We collect only what we need to operate the app and communicate with you:</p>
+  <ul>
+    <li>Email addresses submitted through our waitlist form</li>
+    <li>Basic usage data through Expo and app store analytics (anonymous)</li>
+    <li>Device information required to deliver the app experience</li>
+  </ul>
+
+  <h2>What we don't collect</h2>
+  <p>We do not sell your data. We do not serve ads. We do not track your behavior across other apps or websites. The Good Scroll is built as an antidote to attention-extracting platforms — we have no interest in becoming one.</p>
+
+  <h2>How we use your email</h2>
+  <p>If you join our waitlist, we use your email address to notify you when the app launches and to share occasional updates about The Good Scroll. You can unsubscribe at any time by replying to any email or contacting us directly at <a href="mailto:jaredgoodscroll@gmail.com">jaredgoodscroll@gmail.com</a>.</p>
+
+  <h2>Third-party services</h2>
+  <p>We use the following third-party services to operate:</p>
+  <ul>
+    <li><strong>Netlify</strong> — website hosting and form submissions</li>
+    <li><strong>Pexels</strong> — nature photography used as backgrounds</li>
+    <li><strong>Expo</strong> — app development and distribution platform</li>
+    <li><strong>Mailchimp</strong> — email list management</li>
+  </ul>
+  <p>Each of these services has their own privacy policies governing their use of data.</p>
+
+  <h2>Data retention</h2>
+  <p>We retain your email address until you request removal. To request deletion of your data, email us at <a href="mailto:jaredgoodscroll@gmail.com">jaredgoodscroll@gmail.com</a> and we will remove it within 30 days.</p>
+
+  <h2>Children's privacy</h2>
+  <p>The Good Scroll is not directed at children under 13. We do not knowingly collect personal information from children under 13.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>We may update this privacy policy from time to time. We will notify waitlist subscribers of significant changes via email. The effective date at the top of this page reflects the most recent update.</p>
+
+  <div class="divider"></div>
+
+  <!-- TERMS -->
+  <span class="section-label">Terms of Use</span>
+
+  <h2>Acceptance</h2>
+  <p>By downloading or using The Good Scroll, you agree to these terms. If you do not agree, please do not use the app.</p>
+
+  <h2>The app</h2>
+  <p>The Good Scroll provides curated Bible verses paired with nature photography in a vertical scroll format. The app is free to download. Premium features may be offered in the future on a subscription basis.</p>
+
+  <h2>Content</h2>
+  <p>Bible verses presented in The Good Scroll are sourced from public domain translations (KJV) and licensed Bible APIs. Nature photography is sourced from Pexels under their free license. All content is curated for a peaceful, faith-affirming experience.</p>
+
+  <h2>User conduct</h2>
+  <p>The Good Scroll is a read-only content experience. You agree not to attempt to reverse engineer, copy, modify, or redistribute the app or its content without permission.</p>
+
+  <h2>Sharing</h2>
+  <p>You are encouraged to share verse cards generated by the app. Shared content should include attribution to The Good Scroll where possible.</p>
+
+  <h2>Disclaimer</h2>
+  <p>The Good Scroll is provided "as is" without warranties of any kind. We are not responsible for any interruptions in service, content errors, or technical issues. Bible verses are presented for personal encouragement and reflection — we make no theological or doctrinal claims.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms or our privacy practices? Reach us at <a href="mailto:jaredgoodscroll@gmail.com">jaredgoodscroll@gmail.com</a>.</p>
+
+</div>
+
+<footer>
+  <p class="footer-logo">The Good Scroll · thegoodscroll.app</p>
+</footer>
+
+</body>
+</html>
